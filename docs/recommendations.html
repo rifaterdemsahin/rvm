@@ -1,0 +1,14 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Recommendations · RVM Green Screen</title><link rel="stylesheet" href="style.css"></head><body><main>
+<h1>💡 Recommendations</h1>
+<p>Ranked by how much each would improve the result.</p>
+<div class="grid">
+<div class="card">🥇 <b>Run the full 137 s clip</b><br>Only 12 s was processed. At ~8 fps the full take is about 17 minutes. Use <code>-ss</code>/<code>-t</code> per section for the parts you keep.</div>
+<div class="card">🥈 <b>Tune downsample ratio per shot</b><br>Soft or blobby edges: raise toward 0.5. Background bleeding through: lower it. This is the one real knob.</div>
+<div class="card">🥉 <b>Light the screen evenly</b><br>The chroma half of the hybrid depends on it. Even lighting plus distance from the screen cuts spill at the source.</div>
+<div class="card">🎨 <b>Match the background</b><br>Blur, colour temperature and light direction of the background should match the person. A light-wrap pass would blend edges further.</div>
+<div class="card">🔤 <b>Add captions</b><br>Transcribe with Whisper and render as Remotion text for Shorts.</div>
+<div class="card">🧪 <b>Benchmark before trusting it</b><br>Test on 3 to 5 different clips (hair, props, fast motion) before relying on it for a client.</div>
+<div class="card">🏆 <b>Hybrid with Resolve for hero shots</b><br>Export the RGBA from here, finish edges and grade in Resolve.</div>
+<div class="card">🖥️ <b>CUDA box? Try MatAnyone</b><br>Better hair and fast-motion detail than RVM.</div>
+</div>
+<h2>⚠️ Known issue on this Mac</h2><p>Remotion's own downloaded browser was corrupt here, so rendering needs your installed Chrome (see the Code page command).</p></main><script src="menu.js"></script></body></html>
