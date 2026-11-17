@@ -10,7 +10,7 @@ exec(src_text[src_text.index("def chroma_alpha"):src_text.index("container = av.
 chroma_alpha, despill = ns["chroma_alpha"], ns["despill"]
 
 src, out = sys.argv[1], sys.argv[2]
-dev = "mps" if torch.backends.mps.is_available() else "cpu"
+dev = "cuda" if torch.cuda.is_available() else ("mps" if torch.backends.mps.is_available() else "cpu")
 model = MattingNetwork("mobilenetv3").eval().to(dev)
 model.load_state_dict(torch.load(os.path.join(here, "weights", "rvm_mobilenetv3.pth"), map_location=dev))
 c = av.open(src); st = c.streams.video[0]; W, H = st.codec_context.width, st.codec_context.height
