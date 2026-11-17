@@ -1,12 +1,12 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Performance · RVM Green Screen</title><link rel="stylesheet" href="style.css"></head><body><main>
-<h1>Performance</h1><p>Measured on this Mac (Apple Silicon, PyTorch MPS), live from <code>stats.json</code>.</p>
+<h1>⚡ Performance</h1><p>Measured on this Mac (Apple Silicon, PyTorch MPS), live from <code>stats.json</code>.</p>
 <div class="grid" id="cards"></div>
-<h2>Pipeline stage timing</h2><div class="card" id="stages"></div>
-<h2>Settings</h2><table id="settings"></table>
+<h2>⏱️ Pipeline stage timing</h2><div class="card" id="stages"></div>
+<h2>⚙️ Settings</h2><table id="settings"></table>
 </main><script src="menu.js"></script><script>
 fetch("stats.json").then(r=>r.json()).then(s=>{
  const c=(v,l)=>`<div class="card stat"><b>${v}</b><span>${l}</span></div>`;
- document.getElementById("cards").innerHTML=c(s.matting.avg_fps.toFixed(1)+" fps","RVM matting throughput")+c(s.matting.avg_ms.toFixed(0)+" ms","per frame (matte+key+despill+PNG)")+c(s.matting.frames,"frames processed")+c(s.render.seconds.toFixed(0)+" s","Remotion render (12 s clip)")+c(s.render.fps.toFixed(1)+" fps","Remotion render speed");
+ document.getElementById("cards").innerHTML=c(s.matting.avg_fps.toFixed(1)+" fps","🚀 RVM matting throughput")+c(s.matting.avg_ms.toFixed(0)+" ms","🖼️ per frame (matte+key+despill+PNG)")+c(s.matting.frames,"🎞️ frames processed")+c(s.render.seconds.toFixed(0)+" s","🎥 Remotion render (12 s clip)")+c(s.render.fps.toFixed(1)+" fps","💨 Remotion render speed");
  const max=Math.max(...s.stages.map(x=>x.seconds));
  document.getElementById("stages").innerHTML=s.stages.map(x=>`<div style="margin:10px 0"><div style="display:flex;justify-content:space-between"><span>${x.name}</span><span>${x.seconds.toFixed(1)} s</span></div><div class="bar"><i style="width:${100*x.seconds/max}%"></i></div></div>`).join("");
  document.getElementById("settings").innerHTML=Object.entries(s.settings).map(([k,v])=>`<tr><th>${k}</th><td>${v}</td></tr>`).join("");

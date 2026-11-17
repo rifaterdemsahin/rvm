@@ -1,0 +1,38 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>vs DaVinci Resolve · RVM Green Screen</title><link rel="stylesheet" href="style.css"></head><body><main>
+<h1>⚖️ Why this beats a manual Resolve green-screen key</h1>
+<p>Resolve's 3D Keyer and Delta Keyer are excellent tools. The argument here is not "better pixels on every shot". It is <b>fewer ways to get it wrong</b>, because a model and a script replace a pile of hand-tuned nodes.</p>
+
+<div class="card"><svg viewBox="0 0 900 250" style="width:100%;height:auto" role="img" aria-label="Where errors come from">
+<g font-family="system-ui" font-size="13" fill="currentColor" style="color:var(--fg)">
+<text x="10" y="22" font-weight="700">🎛️ Resolve (manual)</text>
+<text x="10" y="44">Pick colour → tune 8+ sliders → despill node → edge node → matte finesse → repeat per shot</text>
+<rect x="10" y="56" width="880" height="14" rx="7" fill="var(--line)"/><rect x="10" y="56" width="760" height="14" rx="7" fill="#e5484d"/>
+<text x="10" y="92" font-size="11">🧍 human-dependent steps (each one a place to introduce error)</text>
+<text x="10" y="140" font-weight="700">🤖 RVM + script (this repo)</text>
+<text x="10" y="162">Run <tspan font-family="ui-monospace">python key.py clip.mp4</tspan> → same thresholds, same output</text>
+<rect x="10" y="174" width="880" height="14" rx="7" fill="var(--line)"/><rect x="10" y="174" width="180" height="14" rx="7" fill="#5ee08a"/>
+<text x="10" y="210" font-size="11">🧍 only decision left: downsample ratio</text></g></svg></div>
+
+<h2>✅ Where this approach is less error-prone</h2>
+<table>
+<tr><th>Issue</th><th>🎛️ Resolve keyer</th><th>🤖 RVM + chroma hybrid</th></tr>
+<tr><td>🔁 Reproducibility</td><td>Node tweaks live in a project; easy to drift between clips</td><td>One script, versioned in git. Same input → same output</td></tr>
+<tr><td>🟩 Uneven lighting / screen wrinkles</td><td>Colour key breaks at shadows and hot spots; needs garbage mattes</td><td>RVM segments the <i>person</i>, so screen colour variation barely matters</td></tr>
+<tr><td>👕 Green-ish or dark clothing</td><td>Keys holes into the subject</td><td>Chroma key can't punch holes where RVM says "solid" (max() rule)</td></tr>
+<tr><td>⚡ Flicker</td><td>Per-frame colour threshold flickers on noise</td><td>RVM carries recurrent state across frames, so the matte is temporally stable</td></tr>
+<tr><td>🪄 Spill</td><td>Separate despill node, easy to forget or overdo</td><td>Despill is built into the pipeline for every frame</td></tr>
+<tr><td>📦 Batch / automation</td><td>Manual per clip; scripting is limited</td><td>Fully scriptable: drop clips in, get composites out, CI-able</td></tr>
+<tr><td>🧾 Auditability</td><td>Hard to diff a node graph</td><td>Parameters are plain code; <code>git diff</code> shows every change</td></tr>
+<tr><td>💸 Cost</td><td>Free tier is fine, but keyer quality gating and hardware vary</td><td>Free, open-source (RVM is GPL-3.0), runs on a laptop at ~8 fps</td></tr>
+</table>
+
+<h2>🧭 The honest trade-offs</h2>
+<div class="grid">
+<div class="card">🏆 <b>Resolve still wins</b> for hair-level fine detail on a perfectly lit screen, for colour grading, and for hand-finishing a hero shot.</div>
+<div class="card">🤖 <b>RVM can miss props</b> (mug, pen) and slightly blur very fast arm motion. The chroma half of the hybrid catches most of this; MatAnyone is better on CUDA.</div>
+<div class="card">🧪 <b>Verified here only on one 12 s clip</b>. The reliability claims above come from how the method works, not from a benchmark across many shots.</div>
+</div>
+
+<h2>🎯 Bottom line</h2>
+<p>Use this pipeline when you need <b>consistent results across many clips with no hand-tuning</b>. Keep Resolve for the final polish on shots that matter most. The two combine well: export the RGBA from this repo, then drop it above your background in Resolve.</p>
+</main><script src="menu.js"></script></body></html>

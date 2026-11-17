@@ -1,15 +1,29 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Method · RVM Green Screen</title><link rel="stylesheet" href="style.css"></head><body><main>
-<h1>Method</h1>
-<h2>1. Matte with RVM</h2><p>Robust Video Matting is a recurrent network: hidden state carries between frames, so the matte stays temporally stable (less flicker than per-frame models). We use MobileNetV3 on MPS with <code>downsample_ratio=0.4</code>, which preserves fingers and hair edges at 1624×1080.</p>
-<h2>2. Chroma-key refinement</h2><p>RVM is trained on people and can leave soft halos. A green-dominance key, <code>greenness = G − max(R, B)</code>, is thresholded to a soft alpha. Where RVM is confident the pixel is foreground (&gt;0.98) we take the larger of the two (fills holes); elsewhere we take the smaller (removes green fringe).</p>
-<h2>3. Despill</h2><p>Remaining green reflections on skin and arms are removed by clamping G to the average of R and B.</p>
-<h2>4. Edge cleanup</h2><p>0.8 px Gaussian on alpha, then a levels remap (0.05–0.95) to crush noise while keeping a soft edge.</p>
-<h2>5. Compose in Remotion</h2><p>The transparent WebM is layered over a gently zooming, slightly blurred background to fake depth of field, with contrast/saturation grade, drop shadow, vignette, and fades. Audio comes from the source clip.</p>
-<h2>Run it</h2>
+<h1>🧪 Method</h1>
+<div class="card"><svg viewBox="0 0 900 230" style="width:100%;height:auto" role="img" aria-label="Alpha merge diagram">
+<defs><marker id="b" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8z" fill="currentColor"/></marker></defs>
+<g stroke="currentColor" fill="none" stroke-width="1.5" font-family="system-ui" font-size="13" style="color:var(--acc)">
+<rect x="10" y="20" width="170" height="50" rx="10"/><rect x="10" y="150" width="170" height="50" rx="10"/>
+<rect x="300" y="20" width="200" height="50" rx="10"/><rect x="300" y="150" width="200" height="50" rx="10"/>
+<rect x="610" y="85" width="170" height="60" rx="10"/><rect x="800" y="85" width="90" height="60" rx="10"/>
+<path d="M180,45 H298" marker-end="url(#b)"/><path d="M180,175 H298" marker-end="url(#b)"/>
+<path d="M500,45 L608,105" marker-end="url(#b)"/><path d="M500,175 L608,125" marker-end="url(#b)"/><path d="M780,115 H798" marker-end="url(#b)"/></g>
+<g fill="currentColor" font-family="system-ui" font-size="13" text-anchor="middle" style="color:var(--fg)">
+<text x="95" y="50">🎞️ RGB frame</text><text x="95" y="180">🔁 RNN hidden state</text>
+<text x="400" y="42">🧠 RVM α (body shape)</text><text x="400" y="58" font-size="11">temporally stable</text>
+<text x="400" y="172">🟩 Chroma α = 1−G−max(R,B)</text><text x="400" y="188" font-size="11">precise edges</text>
+<text x="695" y="110">⚖️ Merge</text><text x="695" y="128" font-size="11">min() / max() by confidence</text>
+<text x="845" y="110">🪄 Despill</text><text x="845" y="128" font-size="11">G ≤ (R+B)/2</text></g></svg></div>
+<h2>🧠 1. Matte with RVM</h2><p>Robust Video Matting is a recurrent network: hidden state carries between frames, so the matte stays temporally stable (less flicker than per-frame models). We use MobileNetV3 on MPS with <code>downsample_ratio=0.4</code>, which preserves fingers and hair edges at 1624×1080.</p>
+<h2>🟩 2. Chroma-key refinement</h2><p>RVM is trained on people and can leave soft halos. A green-dominance key, <code>greenness = G − max(R, B)</code>, is thresholded to a soft alpha. Where RVM is confident the pixel is foreground (&gt;0.98) we take the larger of the two (fills holes); elsewhere we take the smaller (removes green fringe).</p>
+<h2>🪄 3. Despill</h2><p>Remaining green reflections on skin and arms are removed by clamping G to the average of R and B.</p>
+<h2>✂️ 4. Edge cleanup</h2><p>0.8 px Gaussian on alpha, then a levels remap (0.05–0.95) to crush noise while keeping a soft edge.</p>
+<h2>🎞️ 5. Compose in Remotion</h2><p>The transparent WebM is layered over a gently zooming, slightly blurred background to fake depth of field, with contrast/saturation grade, drop shadow, vignette, and fades. Audio comes from the source clip.</p>
+<h2>▶️ Run it</h2>
 <pre>python3.12 -m venv .venv &amp;&amp; source .venv/bin/activate
 pip install torch torchvision av tqdm numpy pillow opencv-python-headless
 python key.py work/clip.mp4 work/frames
 ffmpeg -framerate 30 -i work/frames/%04d.png -c:v libvpx-vp9 -pix_fmt yuva420p -b:v 0 -crf 20 public/fg.webm
 npm install &amp;&amp; npm run render</pre>
-<h2>Known limits</h2><p>Held props can be missed by RVM; fast hand motion blurs edges slightly; chroma key assumes even lighting on the screen.</p>
+<h2>⚠️ Known limits</h2><p>Held props can be missed by RVM; fast hand motion blurs edges slightly; chroma key assumes even lighting on the screen.</p>
 </main><script src="menu.js"></script></body></html>

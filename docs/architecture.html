@@ -1,14 +1,27 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Architecture · RVM Green Screen</title><link rel="stylesheet" href="style.css"></head><body><main>
-<h1>Architecture</h1><p>End-to-end flow, from the newest file in Downloads to the deployed page.</p>
+<h1>🏗️ Architecture</h1><p>End-to-end flow, from the newest file in Downloads to the deployed page.</p>
+<div class="card" style="margin-bottom:16px"><svg viewBox="0 0 900 150" style="width:100%;height:auto" role="img" aria-label="Pipeline diagram">
+<defs><marker id="a" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8z" fill="currentColor"/></marker></defs>
+<g fill="none" stroke="currentColor" stroke-width="1.5" style="color:var(--acc)" font-family="system-ui" font-size="13">
+<rect x="5" y="40" width="120" height="60" rx="10"/><rect x="165" y="40" width="120" height="60" rx="10"/><rect x="325" y="40" width="130" height="60" rx="10"/>
+<rect x="495" y="40" width="120" height="60" rx="10"/><rect x="655" y="40" width="110" height="60" rx="10"/><rect x="800" y="40" width="95" height="60" rx="10"/>
+<path d="M125,70 H163" marker-end="url(#a)"/><path d="M285,70 H323" marker-end="url(#a)"/><path d="M455,70 H493" marker-end="url(#a)"/><path d="M615,70 H653" marker-end="url(#a)"/><path d="M765,70 H798" marker-end="url(#a)"/></g>
+<g fill="currentColor" font-family="system-ui" font-size="13" text-anchor="middle" style="color:var(--fg)">
+<text x="65" y="66">🟩 Source</text><text x="65" y="84" font-size="11">1080p60 mp4</text>
+<text x="225" y="66">✂️ ffmpeg</text><text x="225" y="84" font-size="11">trim · crop</text>
+<text x="390" y="66">🧠 RVM + key</text><text x="390" y="84" font-size="11">matte · despill</text>
+<text x="555" y="66">📦 WebM α</text><text x="555" y="84" font-size="11">VP9 alpha</text>
+<text x="710" y="66">🎞️ Remotion</text><text x="710" y="84" font-size="11">compose</text>
+<text x="847" y="66">🌐 Pages</text><text x="847" y="84" font-size="11">deploy</text></g></svg></div>
 <div class="flow">
-<div class="step"><b>1 · Source</b><small>~/Downloads/2025-10-26-06-33.mp4 · 1920×1080 @ 60 fps, pillarboxed</small></div><div class="arrow">▼</div>
-<div class="step"><b>2 · Prep (ffmpeg)</b><small>trim 12 s · crop black bars (cropdetect) → 1624×1080 · 30 fps</small></div><div class="arrow">▼</div>
-<div class="step"><b>3 · key.py (PyTorch / MPS)</b><small>RVM MobileNetV3 matte (recurrent, downsample 0.4) + chroma key (G − max(R,B)) merged → soft alpha · average despill</small></div><div class="arrow">▼</div>
-<div class="step"><b>4 · Encode (ffmpeg)</b><small>RGBA PNG sequence → transparent VP9 WebM (yuva420p) · audio → m4a</small></div><div class="arrow">▼</div>
-<div class="step"><b>5 · Remotion composition</b><small>background.jpg (push-in, depth blur) + fg.webm + vignette + audio → output.mp4 (H.264)</small></div><div class="arrow">▼</div>
-<div class="step"><b>6 · GitHub Pages</b><small>/docs served as static site · shared menu.js nav</small></div>
+<div class="step"><b>1 · 🟩 Source</b><small>~/Downloads/2025-10-26-06-33.mp4 · 1920×1080 @ 60 fps, pillarboxed</small></div><div class="arrow">▼</div>
+<div class="step"><b>2 · ✂️ Prep (ffmpeg)</b><small>trim 12 s · crop black bars (cropdetect) → 1624×1080 · 30 fps</small></div><div class="arrow">▼</div>
+<div class="step"><b>3 · 🧠 key.py (PyTorch / MPS)</b><small>RVM MobileNetV3 matte (recurrent, downsample 0.4) + chroma key (G − max(R,B)) merged → soft alpha · average despill</small></div><div class="arrow">▼</div>
+<div class="step"><b>4 · 📦 Encode (ffmpeg)</b><small>RGBA PNG sequence → transparent VP9 WebM (yuva420p) · audio → m4a</small></div><div class="arrow">▼</div>
+<div class="step"><b>5 · 🎞️ Remotion composition</b><small>background.jpg (push-in, depth blur) + fg.webm + vignette + audio → output.mp4 (H.264)</small></div><div class="arrow">▼</div>
+<div class="step"><b>6 · 🌐 GitHub Pages</b><small>/docs served as static site · shared menu.js nav</small></div>
 </div>
-<h2>Repository map</h2>
+<h2>🗺️ Repository map</h2>
 <table><tr><th>Path</th><td>Role</td></tr>
 <tr><td><code>key.py</code></td><td>RVM matting + chroma refinement + despill</td></tr>
 <tr><td><code>third_party_rvm/</code>, <code>weights/</code></td><td>RVM model code and MobileNetV3 weights</td></tr>
