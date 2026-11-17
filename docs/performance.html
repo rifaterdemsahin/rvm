@@ -3,6 +3,18 @@
 <div class="grid" id="cards"></div>
 <h2>⏱️ Pipeline stage timing</h2><div class="card" id="stages"></div>
 <h2>⚙️ Settings</h2><table id="settings"></table>
+<h2>🔬 Where the time goes</h2>
+<p>Model alone runs at ~36 fps, but the full pipeline ran at 8.4 fps. The model is <b>not</b> the bottleneck: CPU post-processing and PNG writes are. Measured per 1624×1080 frame:</p>
+<div class="card" id="prof"></div>
+<h2>🧪 Model-only speed (RVM MobileNetV3, MPS, 45 frames)</h2><div class="card" id="bench"></div>
+<h2>🏁 End-to-end: PNG route vs piped route (360 frames)</h2><div class="card" id="e2e"></div>
+<p style="color:var(--mut)">Measured on one machine and one clip. fp16 gave no gain at ratio 0.4 and a small one at 0.25.</p>
+<script>
+const bar=(l,v,max,u)=>`<div style="margin:10px 0"><div style="display:flex;justify-content:space-between"><span>${l}</span><span>${v.toFixed(1)} ${u}</span></div><div class="bar"><i style="width:${100*v/max}%"></i></div></div>`;
+fetch("profile.json").then(r=>r.json()).then(p=>{const m=1000/36;const rows=[["🧠 RVM model (MPS)",m],["💾 PNG write",p.png_ms],["🪄 Despill",p.despill_ms],["🟩 Chroma key",p.chroma_ms],["🌫️ Alpha blur",p.blur_ms]];const mx=Math.max(...rows.map(r=>r[1]));document.getElementById("prof").innerHTML=rows.map(r=>bar(r[0],r[1],mx,"ms")).join("")+"<small style=\"color:var(--mut)\">The remaining ~40 ms of the 118 ms frame is decode, host/device copies and numpy merge (not individually profiled).</small>"});
+fetch("bench.json").then(r=>r.json()).then(b=>{const mx=Math.max(...b.model_only_fps.map(x=>x.fps));document.getElementById("bench").innerHTML=b.model_only_fps.map(x=>bar(x.name,x.fps,mx,"fps")).join("")});
+document.getElementById("e2e").innerHTML=bar("🐢 key.py + ffmpeg PNG→WebM (43 s + 26 s)",69,69,"s")+bar("🐇 key_fast.py piped (matte+encode)",32.2,69,"s")+"<b style=\"color:var(--acc)\">≈2.1× faster</b>";
+</script>
 </main><script src="menu.js"></script><script>
 fetch("stats.json").then(r=>r.json()).then(s=>{
  const c=(v,l)=>`<div class="card stat"><b>${v}</b><span>${l}</span></div>`;
