@@ -1,0 +1,44 @@
+{
+ "matting": {
+  "device": "mps",
+  "frames": 360,
+  "ratio": 0.4,
+  "res": [
+   1624,
+   1080
+  ],
+  "total_s": 42.69231867790222,
+  "avg_fps": 8.432430262597519,
+  "avg_ms": 118.58977410528395
+ },
+ "render": {
+  "seconds": 43,
+  "fps": 8.372093023255815
+ },
+ "stages": [
+  {
+   "name": "ffmpeg trim + crop",
+   "seconds": 2
+  },
+  {
+   "name": "RVM + chroma key + despill (360 frames)",
+   "seconds": 42.7
+  },
+  {
+   "name": "VP9 alpha WebM encode",
+   "seconds": 26
+  },
+  {
+   "name": "Remotion render (H.264)",
+   "seconds": 43
+  }
+ ],
+ "settings": {
+  "Device": "Apple Silicon \u00b7 PyTorch MPS",
+  "Model": "RVM MobileNetV3",
+  "Downsample ratio": "0.4",
+  "Input": "1624\u00d71080 @ 30 fps, 12 s",
+  "Output": "1920\u00d71080 H.264 + AAC, 7.8 MB",
+  "Browser": "Google Chrome (Remotion chrome-for-testing mode)"
+ }
+}

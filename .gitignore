@@ -1,0 +1,7 @@
+node_modules
+.venv
+work/frames
+work/*.png
+__pycache__
+out
+.DS_Store

@@ -1,0 +1,18 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Architecture · RVM Green Screen</title><link rel="stylesheet" href="style.css"></head><body><main>
+<h1>Architecture</h1><p>End-to-end flow, from the newest file in Downloads to the deployed page.</p>
+<div class="flow">
+<div class="step"><b>1 · Source</b><small>~/Downloads/2025-10-26-06-33.mp4 · 1920×1080 @ 60 fps, pillarboxed</small></div><div class="arrow">▼</div>
+<div class="step"><b>2 · Prep (ffmpeg)</b><small>trim 12 s · crop black bars (cropdetect) → 1624×1080 · 30 fps</small></div><div class="arrow">▼</div>
+<div class="step"><b>3 · key.py (PyTorch / MPS)</b><small>RVM MobileNetV3 matte (recurrent, downsample 0.4) + chroma key (G − max(R,B)) merged → soft alpha · average despill</small></div><div class="arrow">▼</div>
+<div class="step"><b>4 · Encode (ffmpeg)</b><small>RGBA PNG sequence → transparent VP9 WebM (yuva420p) · audio → m4a</small></div><div class="arrow">▼</div>
+<div class="step"><b>5 · Remotion composition</b><small>background.jpg (push-in, depth blur) + fg.webm + vignette + audio → output.mp4 (H.264)</small></div><div class="arrow">▼</div>
+<div class="step"><b>6 · GitHub Pages</b><small>/docs served as static site · shared menu.js nav</small></div>
+</div>
+<h2>Repository map</h2>
+<table><tr><th>Path</th><td>Role</td></tr>
+<tr><td><code>key.py</code></td><td>RVM matting + chroma refinement + despill</td></tr>
+<tr><td><code>third_party_rvm/</code>, <code>weights/</code></td><td>RVM model code and MobileNetV3 weights</td></tr>
+<tr><td><code>src/</code></td><td>Remotion project (Root, Composite)</td></tr>
+<tr><td><code>public/</code></td><td>Remotion assets: background, fg.webm, audio</td></tr>
+<tr><td><code>docs/</code></td><td>GitHub Pages site and rendered video</td></tr></table>
+</main><script src="menu.js"></script></body></html>
