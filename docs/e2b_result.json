@@ -1,0 +1,11 @@
+{
+ "timings_s": {
+  "create_sandbox": 1.7,
+  "upload": 11.1,
+  "install_deps": 0.0,
+  "keying": 248.6,
+  "download": 1.7
+ },
+ "frames": 360,
+ "log": "exit=0\ndevice=cpu 360 frames in 221.2s -> 1.6 fps end-to-end (matte+encode)\nMem:            3931         351        3241           1         572        3579"
+}
